@@ -1,0 +1,47 @@
+!
+! Конфигурация VLAN на Cisco Switch
+!
+
+! Создаем VLAN
+vlan 10
+ name HR
+!
+vlan 20
+ name IT
+!
+
+! Назначаем порты в соответствующие VLAN
+interface FastEthernet 0/1
+ switchport mode access
+ switchport access vlan 10
+!
+interface FastEthernet 0/2
+ switchport mode access
+ switchport access vlan 10
+!
+
+! Настраиваем trunk для связи с маршрутизатором или другим коммутатором
+interface g0/1
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20
+!
+
+! Сохраняем конфигурацию
+wr
+!
+
+!
+! Конфигурация VLAN на Cisco Router
+!
+conf t
+interface GigabitEthernet0/0
+ no shutdown
+ ! Подинтерфейс для VLAN 10 (HR)
+ interface GigabitEthernet0/0.10
+  encapsulation dot1Q 10
+  ip address 192.168.10.1 255.255.255.0
+ ! Подинтерфейс для VLAN 20 (IT)
+ interface GigabitEthernet0/0.20
+  encapsulation dot1Q 20
+  ip address 192.168.20.1 255.255.255.0
+exit
